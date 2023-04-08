@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 9e801d6829c654141a2b75e330cd4d3d
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - NanumSquare
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: e02aae1c54cb74809a5ff9d23c728677, type: 3}
+  - {fileID: 12800000, guid: 40d7bd084244a4b24ac87f902ac14aec, type: 3}
+  - {fileID: 12800000, guid: 61a07a6ccad584c31a3d177c56a9ae50, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
