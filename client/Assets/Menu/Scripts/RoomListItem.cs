@@ -12,8 +12,4 @@ public class RoomListItem : MonoBehaviour {
     info = _info;
     label.text = _info.Name;
   }
-
-  public void OnClick() {
-    Launcher.Instance.JoinRoom(info);
-  }
 }

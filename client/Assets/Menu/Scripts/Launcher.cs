@@ -5,11 +5,10 @@ using UnityEngine;
 using TMPro;
 using Photon.Realtime;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
-public class Launcher : MonoBehaviourPunCallbacks
+public class Launcher : MonoBehaviour
 {
-    public static Launcher Instance;
-
     [SerializeField] TMP_InputField playerNameInputField;
     [SerializeField] TMP_Text titleWelcomeText;
     [SerializeField] TMP_InputField roomNameInputField;
@@ -21,47 +20,22 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject startGameButton;
     [SerializeField] TMP_Text errorText;
 
+    private string name;
+        
     private void Awake()
     {
-        Instance = this;
     }
 
     private void Start()
     {
-        Debug.Log("Connecting to master...");
-        PhotonNetwork.ConnectUsingSettings();
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Connected to master!");
-        PhotonNetwork.JoinLobby();
-        // Automatically load scene for all clients when the host loads a scene
-        PhotonNetwork.AutomaticallySyncScene = true;
-    }
-
-    public override void OnJoinedLobby()
-    {
-        if (PhotonNetwork.NickName == "")
-        {
-            PhotonNetwork.NickName =
-                "Player " + Random.Range(0, 1000).ToString(); // Set a default nickname, just as a backup
-            MenuManager.Instance.OpenMenu("name");
-        }
-        else
-        {
-            MenuManager.Instance.OpenMenu("title");
-        }
-
-        Debug.Log("Joined lobby");
+        MenuManager.Instance.OpenMenu("name");
     }
 
     public void SetName()
     {
-        string name = playerNameInputField.text;
+        name = playerNameInputField.text;
         if (!string.IsNullOrEmpty(name))
         {
-            PhotonNetwork.NickName = name;
             titleWelcomeText.text = "META:seum";
             MenuManager.Instance.OpenMenu("title");
             playerNameInputField.text = "";
@@ -88,31 +62,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnJoinedRoom()
-    {
-        // Called whenever you create or join a room
-        MenuManager.Instance.OpenMenu("room");
-        roomNameText.text = PhotonNetwork.CurrentRoom.Name;
-        Player[] players = PhotonNetwork.PlayerList;
-        foreach (Transform trans in playerListContent)
-        {
-            Destroy(trans.gameObject);
-        }
-
-        for (int i = 0; i < players.Count(); i++)
-        {
-            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
-        }
-
-        // Only enable the start button if the player is the host of the room
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -125,46 +74,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("loading");
     }
 
-    public override void OnLeftRoom()
-    {
-        MenuManager.Instance.OpenMenu("title");
-    }
-
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        foreach (Transform trans in roomListContent)
-        {
-            Destroy(trans.gameObject);
-        }
-
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            if (roomList[i].RemovedFromList)
-            {
-                // Don't instantiate stale rooms
-                continue;
-            }
-
-            Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
-        }
-    }
-
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        errorText.text = "Room Creation Failed: " + message;
-        MenuManager.Instance.OpenMenu("error");
-    }
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
-    }
-
     public void StartGame()
     {
         // 1 is used as the build index of the game scene, defined in the build settings
         // Use this instead of scene management so that *everyone* in the lobby goes into this scene
-        PhotonNetwork.LoadLevel(1);
+        SceneManager.LoadScene("Game");
     }
 
     public void QuitGame()

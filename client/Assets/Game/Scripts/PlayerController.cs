@@ -2,6 +2,7 @@ using Cinemachine;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Scripts;
 using UnityEngine;
 
 //[RequireComponent(typeof(CharacterController))]
@@ -11,11 +12,12 @@ public class PlayerController : MonoBehaviour {
   [SerializeField] private float gravityValue = -9.81f;
 
   private CharacterController controller;
-  private PhotonView pv;
+  private NetworkManager NetworkManager;
   private Vector3 playerVelocity;
   private bool groundedPlayer;
   private Transform cameraTransform;
-
+  private string id;
+  
   private void Start() {
     controller = GetComponent<CharacterController>();
     pv = GetComponent<PhotonView>();
