@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Scripts;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour {
   public static InputManager Instance;
   private PlayerControls playerControls;
+  private NetworkManager networkManager;
 
   private void Awake() {
     playerControls = new PlayerControls();
+    networkManager = new NetworkManager();
     if (Instance) {
       Destroy(gameObject);
       return;

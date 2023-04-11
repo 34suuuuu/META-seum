@@ -1,5 +1,4 @@
 using Cinemachine;
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Scripts;
@@ -12,31 +11,32 @@ public class PlayerController : MonoBehaviour {
   [SerializeField] private float gravityValue = -9.81f;
 
   private CharacterController controller;
-  private NetworkManager NetworkManager;
+  private NetworkManager networkManager;
   private Vector3 playerVelocity;
   private bool groundedPlayer;
   private Transform cameraTransform;
   private string id;
-  
+
   private void Start() {
     controller = GetComponent<CharacterController>();
-    pv = GetComponent<PhotonView>();
-
-    if (!pv.IsMine) {
-      Destroy(GetComponentInChildren<CinemachineVirtualCamera>().gameObject);
-      Destroy(GetComponentInChildren<CharacterController>());
-      Destroy(GetComponentInChildren<Rigidbody>());
-    }
+    networkManager = GetComponent<NetworkManager>();
+    
+    // if (!pv.IsMine) {
+    //   Destroy(GetComponentInChildren<CinemachineVirtualCamera>().gameObject);
+    //   Destroy(GetComponentInChildren<CharacterController>());
+    //   Destroy(GetComponentInChildren<Rigidbody>());
+    // }
 
     Cursor.visible = false;
     cameraTransform = Camera.main.transform;
   }
 
   void Update() {
-    if (!pv.IsMine) {
-      // This isn't our player, so ignore controls and let Photon update their movement
-      return;
-    }
+    // if (!pv.IsMine) {
+    //   
+    //   return;
+    // }
+    
     groundedPlayer = controller.isGrounded;
     if (groundedPlayer && playerVelocity.y < 0) {
       playerVelocity.y = 0f;
@@ -55,5 +55,7 @@ public class PlayerController : MonoBehaviour {
 
     playerVelocity.y += gravityValue * Time.deltaTime;
     controller.Move(playerVelocity * Time.deltaTime);
+    
+    networkManager.SendPacket(transform.position);
   }
 }

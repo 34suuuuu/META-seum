@@ -52,12 +52,15 @@ namespace Game.Scripts
 
         void InitializeServer()
         {
-            ClientPacket clientPacket = new ClientPacket(PacketType.InitializePacket, null, -1, null);
+            Vector3 initialPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            ClientPacket clientPacket = new ClientPacket(PacketType.InitializePacket, new SerializableVector3(initialPosition), -1, null);
             byte[] packet = ClientPacket.Serialize(clientPacket);
+            ClientPacket newClientPakcet = ClientPacket.Deserialize(packet);
+            Debug.Log(newClientPakcet.playerPosition.toVector3().ToString());
             _udp.SendTo(packet, _endPoint);
         }
 
-        void SendPacket(InputActionAsset move)
+        public void SendPacket(Vector3 move)
         {
             if (id == null || id == "")
             {
@@ -66,14 +69,14 @@ namespace Game.Scripts
                 return;
             }
 
-            ClientPacket clientPacket = new ClientPacket(PacketType.PlayerControlPacket, move, packetNumber, id);
+            ClientPacket clientPacket = new ClientPacket(PacketType.PlayerControlPacket, new SerializableVector3(move), packetNumber, id);
             byte[] arr = ClientPacket.Serialize(clientPacket);
             _udp.SendTo(arr, _endPoint);
         }
 
         void OnQuit()
         {
-            ClientPacket clientPacket = new ClientPacket(PacketType.QuitPacket, null, -1, null);
+            ClientPacket clientPacket = new ClientPacket(PacketType.QuitPacket, new SerializableVector3(), -1, null);
             byte[] arr = ClientPacket.Serialize(clientPacket);
             _udp.SendTo(arr, _endPoint);
             _udp.Close();
@@ -87,8 +90,39 @@ namespace Game.Scripts
                 _udp.Receive(buf);
 
                 ClientPacket clientPacket = ClientPacket.Deserialize(buf);
-                
+                string parsedId = clientPacket.id;
+
+                if (clientPacket.packetType == PacketType.InitializePacket)
+                {
+                    id = parsedId;
+                    Debug.Log("client ID: " + id);
+                    return;
+                } else if (clientPacket.packetType == PacketType.QuitPacket && _otherClients.ContainsKey(id))
+                {
+                    Destroy(_otherClients[parsedId]);
+                    _otherClients.Remove(parsedId);
+                    return;
+                }
+
+                Vector3 posInPacket = clientPacket.playerPosition.toVector3();
+                if (_otherClients.ContainsKey(parsedId))
+                {
+                    _otherClients[parsedId].transform.position = posInPacket;
+                }
+                else if (!parsedId.Equals(id))
+                {
+                    AddOtherClient(parsedId, posInPacket);
+                }
+                    
             }
+        }
+
+        void AddOtherClient(string parsedId, Vector3 pos)
+        {
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            go.name = parsedId;
+            go.transform.position = pos;
+            _otherClients.Add(parsedId, go);
         }
     }
 }

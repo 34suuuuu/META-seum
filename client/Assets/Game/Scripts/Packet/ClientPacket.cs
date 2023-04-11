@@ -1,27 +1,28 @@
+using System;
 using System.IO;
-using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
 namespace Game.Scripts.Packet
 {
+    [Serializable]
     public class ClientPacket
     {
-        public ClientPacket(PacketType packetType,
-            InputActionAsset inputActionAsset,
-            int packetNum,
-            string id)
+        public ClientPacket(PacketType _packetType,
+            SerializableVector3 _playerPosition,
+            int _packetNum,
+            string _id)
         {
-            _packetType = packetType;
-            _inputActionAsset = inputActionAsset;
-            _packetNum = packetNum;
-            _id = id;
+            packetType = _packetType;
+            playerPosition = _playerPosition;
+            packetNum = _packetNum;
+            id = _id;
         }
 
-        private PacketType _packetType { get; set; }
-        private InputActionAsset _inputActionAsset { get; set; }
-        private int _packetNum { get; set; }
-        private string _id { get; set; }
+        public PacketType packetType { get; set; }
+        public SerializableVector3 playerPosition { get; set; }
+        public int packetNum { get; set; }
+        public string id { get; set; }
         
         public static byte[] Serialize(ClientPacket obj)
         {
