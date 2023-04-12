@@ -97,6 +97,14 @@ namespace StarterAssets
                                    //&& !histories[seqNum].Equals(new StateHistory(packetPos, packetCam)))
                 {
                     Debug.Log(pd.packetNum);
+
+                    Vector3 currentPos = transform.position;
+                    Quaternion currentCam = transform.rotation;
+
+                    pd.playerPosPacket = new PlayerPosPacket(currentPos);
+                    pd.playerCamPacket = new PlayerCamPacket(currentCam);
+                    
+                    SendPacket(pd);
                 } else if (_otherPlayers.ContainsKey(packetId))
                 {
                     UpdateOtherPlayer(packetId, packetPos, packetCam);
@@ -175,7 +183,11 @@ namespace StarterAssets
         {
             pos.y += 1;
             GameObject otherPlayer = _otherPlayers[packetId];
-            otherPlayer.transform.position = pos;
+            Vector3 beforePos = otherPlayer.transform.position;
+
+            float moveSpeed = 4.0f;
+            
+            otherPlayer.transform.position = Vector3.Lerp(beforePos, pos, moveSpeed * Time.deltaTime);
             otherPlayer.transform.rotation = cam;
         }
     }
