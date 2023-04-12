@@ -98,13 +98,6 @@ namespace StarterAssets
                 {
                     Debug.Log(pd.packetNum);
 
-                    Vector3 currentPos = transform.position;
-                    Quaternion currentCam = transform.rotation;
-
-                    pd.playerPosPacket = new PlayerPosPacket(currentPos);
-                    pd.playerCamPacket = new PlayerCamPacket(currentCam);
-                    
-                    SendPacket(pd);
                 } else if (_otherPlayers.ContainsKey(packetId))
                 {
                     UpdateOtherPlayer(packetId, packetPos, packetCam);
@@ -112,6 +105,17 @@ namespace StarterAssets
                 {
                     AddOtherPlayer(packetId, packetPos, packetCam);
                 }
+
+                Vector3 currentPos = transform.position;
+                Quaternion currentCam = transform.rotation;
+
+                pd.status = "connected";
+                pd.playerPosPacket = new PlayerPosPacket(currentPos);
+                pd.playerCamPacket = new PlayerCamPacket(currentCam);
+                pd.playerInfoPacket = new PlayerInfoPacket();
+                pd.playerInfoPacket.id = id;
+                
+                SendPacket(pd);
             }
         }
 

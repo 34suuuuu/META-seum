@@ -27,8 +27,8 @@ public class Server : MonoBehaviour
     {
         clients = new Dictionary<EndPoint, Client>();
 
-        IPHostEntry host = Dns.Resolve(Dns.GetHostName());
-        IPAddress ip = host.AddressList[0];
+        //IPHostEntry host = Dns.Resolve(Dns.GetHostName());
+        IPAddress ip = IPAddress.Parse("127.0.0.1"); //host.AddressList[0];
         IPEndPoint endPoint = new IPEndPoint(ip, port);
 
         Debug.Log("Server IP Address: " + ip);
