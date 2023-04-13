@@ -69,7 +69,6 @@ public class Server : MonoBehaviour
 
     void HandleNewClient(EndPoint addr, PacketDatagram pd)
     {
-        Debug.Log(pd.toString());
         pd.packetNum = 0;
         pd.status = "request";
         pd.playerInfoPacket.id = idAssignIndex++;
@@ -80,11 +79,13 @@ public class Server : MonoBehaviour
 
         pd.status = "connected";
         clients.Add(addr, new Client(pd.playerInfoPacket.id, pd));
+        BroadcastAllPositions();
         SendPositionToAllClients(pd);
     }
 
     void DisconnectClient(EndPoint sender, PacketDatagram pd)
     {
+        Debug.Log($"id:{pd.playerInfoPacket.id}, disconnect client");
         if(clients.ContainsKey(sender))
             clients.Remove(sender);
         Broadcast(pd);
@@ -113,8 +114,8 @@ public class Server : MonoBehaviour
 
     void UpdatePosition(EndPoint addr, PacketDatagram pd)
     {
-        Debug.Log($"packetId: {pd.playerInfoPacket.id}" +
-                  $"position: {pd.playerPosPacket.toString()}");
+        //Debug.Log($"packetId: {pd.playerInfoPacket.id}" +
+        //          $"position: {pd.playerPosPacket.toString()}");
         clients[addr].pd = pd;
         clients[addr].pos = pd.playerPosPacket.toVector3();
         clients[addr].cam = pd.playerCamPacket.toQuaternion();
@@ -132,5 +133,16 @@ public class Server : MonoBehaviour
     {
         byte[] packet = PacketSerializer.Serializer(pd);
         udp.SendTo(packet, addr);
+    }
+
+    void BroadcastAllPositions()
+    {
+        foreach (KeyValuePair<EndPoint, Client> p1 in clients)
+        {
+            foreach (KeyValuePair<EndPoint, Client> p2 in clients)
+            {
+                SendPacket(p1.Value.pd, p2.Key);
+            }
+        }
     }
 }

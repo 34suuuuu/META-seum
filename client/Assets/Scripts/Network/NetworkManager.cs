@@ -106,16 +106,6 @@ namespace StarterAssets
                     AddOtherPlayer(packetId, packetPos, packetCam);
                 }
 
-                Vector3 currentPos = transform.position;
-                Quaternion currentCam = transform.rotation;
-
-                pd.status = "connected";
-                pd.playerPosPacket = new PlayerPosPacket(currentPos);
-                pd.playerCamPacket = new PlayerCamPacket(currentCam);
-                pd.playerInfoPacket = new PlayerInfoPacket();
-                pd.playerInfoPacket.id = id;
-                
-                SendPacket(pd);
             }
         }
 
@@ -151,7 +141,7 @@ namespace StarterAssets
             _udp.SendTo(packet, _endPoint);
         }
 
-        private void SendPacket(PacketDatagram pd)
+        public void SendPacket(PacketDatagram pd)
         {
             if (id == -1)
             {
