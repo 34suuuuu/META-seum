@@ -118,6 +118,7 @@ namespace StarterAssets
             pd.playerPosPacket = new PlayerPosPacket();
             pd.playerCamPacket = new PlayerCamPacket();
             pd.playerInfoPacket = new PlayerInfoPacket();
+            pd.playerInfoPacket.id = id;
             
             SendPacket(pd);
             
@@ -165,7 +166,6 @@ namespace StarterAssets
 
         private void AddOtherPlayer(int packetId, Vector3 pos, Quaternion cam)
         {
-            pos.y += 1;
             GameObject otherPlayer = MonoBehaviour.Instantiate(_playerObject);
             otherPlayer.name = $"ID{packetId}";
             otherPlayer.transform.position = pos;
@@ -175,7 +175,6 @@ namespace StarterAssets
 
         private void UpdateOtherPlayer(int packetId, Vector3 pos, Quaternion cam)
         {
-            pos.y += 1;
             GameObject otherPlayer = _otherPlayers[packetId];
             Vector3 beforePos = otherPlayer.transform.position;
 
