@@ -4,6 +4,8 @@ ScriptsOnlyBuild:
     - Server
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
+    - UnityEditor.Tilemaps.GridPaletteBrushes
+    - UnityEditor.Tilemaps.GridPalettes
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.SceneViewOpenTilePaletteHelper
     - UnityEditor.Tilemaps.TileDragAndDropManager
@@ -33,7 +35,7 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 3048}
+      Script: {instanceID: 3054}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -588,4 +590,5 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/Example.unity
-  playerPath: C:/Users/qowltmd/Desktop/realmeta/buildserver/Multiplayer Practice.exe
+  playerPath: C:/Users/qowltmd/Desktop/realrealmeta/META-seum/serverbuild/Multiplayer
+    Practice.exe

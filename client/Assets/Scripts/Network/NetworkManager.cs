@@ -36,6 +36,7 @@ namespace StarterAssets
         private Socket _udp;
 
         private GameObject _playerObject;
+        private UserInterpolation userMover;
         
         private void Awake()
         {
@@ -62,6 +63,7 @@ namespace StarterAssets
         private void Start()
         {
             _playerObject = Resources.Load("PlayerObject") as GameObject;
+            userMover = GetComponent<UserInterpolation>();
         }
 
         private void Update()
@@ -178,9 +180,7 @@ namespace StarterAssets
             GameObject otherPlayer = _otherPlayers[packetId];
             Vector3 beforePos = otherPlayer.transform.position;
 
-            float moveSpeed = 4.0f;
-            
-            otherPlayer.transform.position = Vector3.Lerp(beforePos, pos, moveSpeed * Time.deltaTime);
+            userMover.Move(otherPlayer, beforePos, pos);
             otherPlayer.transform.rotation = cam;
         }
     }
