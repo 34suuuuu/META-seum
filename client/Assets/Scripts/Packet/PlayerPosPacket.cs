@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using System.Numerics;
 
 namespace StarterAssets.Packet
 {
@@ -12,9 +12,9 @@ namespace StarterAssets.Packet
         }
         public PlayerPosPacket(Vector3 playerPos)
         {
-            x = playerPos.x;
-            y = playerPos.y;
-            z = playerPos.z;
+            x = playerPos.X;
+            y = playerPos.Y;
+            z = playerPos.Z;
         }
         
         public float x { get; set; }

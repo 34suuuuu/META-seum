@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using System.Numerics;
 
 namespace StarterAssets.Packet
 {
@@ -12,10 +12,10 @@ namespace StarterAssets.Packet
         }
         public PlayerCamPacket(Quaternion playerCam)
         {
-            x = playerCam.x;
-            y = playerCam.y;
-            z = playerCam.z;
-            w = playerCam.w;
+            x = playerCam.X;
+            y = playerCam.Y;
+            z = playerCam.Z;
+            w = playerCam.W;
         }
         
         public float x { get; set; }

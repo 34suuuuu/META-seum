@@ -90,8 +90,8 @@ namespace StarterAssets
                 if (packetId == -1 || seqNum == -1)
                     return;
                 
-                Vector3 packetPos = pd.playerPosPacket.toVector3();
-                Quaternion packetCam = pd.playerCamPacket.toQuaternion();
+                Vector3 packetPos = NetworkUtility.ChangeVector3Package(pd.playerPosPacket.toVector3());
+                Quaternion packetCam = NetworkUtility.ChangeQuaternionPackage(pd.playerCamPacket.toQuaternion());
 
                 if (packetId == id)//&& histories.ContainsKey(seqNum) 
                                    //&& !histories[seqNum].Equals(new StateHistory(packetPos, packetCam)))
@@ -134,8 +134,8 @@ namespace StarterAssets
 
             pd.packetNum = -999;
             pd.status = "request";
-            pd.playerPosPacket = new PlayerPosPacket(pos);
-            pd.playerCamPacket = new PlayerCamPacket(cam);
+            pd.playerPosPacket = new PlayerPosPacket(NetworkUtility.ChangeVector3Package(pos));
+            pd.playerCamPacket = new PlayerCamPacket(NetworkUtility.ChangeQuaternionPackage(cam));
             pd.playerInfoPacket = new PlayerInfoPacket();
 
             byte[] packet = PacketSerializer.Serializer(pd);
