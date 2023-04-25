@@ -1,0 +1,32 @@
+﻿<Properties StartupConfiguration="{1812F8E3-5505-47CD-B8DA-AC16941061B9}|Default">
+  <MonoDevelop.Ide.ItemProperties.Server PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Server/PlayerCamPacket.cs">
+    <Files>
+      <File FileName="Server/Program.cs" Line="8" Column="41" />
+      <File FileName="Server/UDPServer.cs" Line="1" Column="1" />
+      <File FileName="Server/PlayerPosPacket.cs" Line="1" Column="1" />
+      <File FileName="Server/PlayerInfoPacket.cs" Line="1" Column="1" />
+      <File FileName="Server/PlayerCamPacket.cs" Line="1" Column="1" />
+      <File FileName="Server/PacketType.cs" Line="1" Column="1" />
+      <File FileName="Server/PacketSerializer.cs" Line="1" Column="1" />
+      <File FileName="Server/PacketDatagram.cs" Line="2" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Server" expanded="True">
+            <Node name="Server" expanded="True">
+              <Node name="PlayerCamPacket.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|anycpu" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
