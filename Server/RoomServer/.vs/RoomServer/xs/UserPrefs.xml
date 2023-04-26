@@ -1,0 +1,23 @@
+﻿<Properties StartupConfiguration="{FD1A9C90-0214-4A7D-AB2F-80959CCCFD4A}|Default">
+  <MonoDevelop.Ide.ItemProperties.RoomServer FirstBuild="True" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="RoomServer/Program.cs">
+    <Files>
+      <File FileName="RoomServer/Program.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="RoomServer" expanded="True">
+            <Node name="RoomServer" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|anycpu" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

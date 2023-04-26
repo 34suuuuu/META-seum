@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.ItemProperties.Server PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="UDPServer.cs">
     <Files>
-      <File FileName="UDPServer.cs" Line="88" Column="47" />
+      <File FileName="UDPServer.cs" Line="93" Column="12" />
       <File FileName="Server.cs" />
     </Files>
     <Pads>
@@ -10,7 +10,7 @@
         <State name="__root__">
           <Node name="Server" expanded="True">
             <Node name="Server" expanded="True">
-              <Node name="References" expanded="True" />
+              <Node name="References" expanded="True" selected="True" />
             </Node>
           </Node>
         </State>

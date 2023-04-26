@@ -117,6 +117,8 @@ namespace StarterAssets
 
             pd.packetNum = -999;
             pd.status = "quit";
+            pd.source = "client";
+            pd.dest = "server";
             pd.playerPosPacket = new PlayerPosPacket();
             pd.playerCamPacket = new PlayerCamPacket();
             pd.playerInfoPacket = new PlayerInfoPacket();
@@ -136,6 +138,8 @@ namespace StarterAssets
 
             pd.packetNum = -999;
             pd.status = "request";
+            pd.source = "client";
+            pd.dest = "server";
             pd.playerPosPacket = new PlayerPosPacket(NetworkUtility.ChangeVector3Package(pos));
             pd.playerCamPacket = new PlayerCamPacket(NetworkUtility.ChangeQuaternionPackage(cam));
             pd.playerInfoPacket = new PlayerInfoPacket();

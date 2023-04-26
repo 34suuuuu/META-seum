@@ -9,21 +9,23 @@ namespace Server
 {
     public class UDPServer // udp 소켓 생성 및 수신한 패킷 처리
     {
-        private int port;
+        private int port, roomPort1;
         private Socket server;
-        //private int groupPort1 = 5155;
-        IPEndPoint groupIE;
+        private IPAddress roomServer1IP;
+        private IPEndPoint roomServer1EP;
         public UDPServer(int port)
         {
             this.port = port;
+            //this.roomPort1 = roomPort1;
             this.server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            //groupIE = new IPEndPoint(IPAddress.Parse("127.0.0.1"), groupPort1);
 
         }
 
         public void Start() // 새로운 소켓 생성, 로컬엔드포인트에 바인딩 -> 수신대기 상태
         {
             IPEndPoint localEP = new IPEndPoint(IPAddress.Any, port);
+            //roomServer1IP = IPAddress.Parse("127.0.0.1");
+            //roomServer1EP = new IPEndPoint(roomServer1IP, roomPort1);
             server.Bind(localEP);
             Console.WriteLine("Server Start!");
             BeginReceive(); // 비동기적으로 패킷 수신
@@ -77,15 +79,14 @@ namespace Server
         {
             packet.playerInfoPacket.group = 2;
             Console.WriteLine("Received packet from {0}:{1}", remoteEP.Address, remoteEP.Port);
-            Console.WriteLine("user id :{0}, user name :{1}, group id :{2}", packet.playerInfoPacket.id, packet.playerInfoPacket.playerName, packet.playerInfoPacket.group);
+            Console.WriteLine("user id :{0}, user name :{1}, group id :{2}, source :{3}", packet.playerInfoPacket.id, packet.playerInfoPacket.playerName, packet.playerInfoPacket.group, packet.source);
             //int groupWeight = packet.playerInfoPacket.group == 1 ? 5 : packet.playerInfoPacket.group == 2 ? 3 : 1;
-
             // room id가 있으면 room id로 함
             // room id가 없어서 일단 group id를 보고 이동
             byte[] groupPacket = PacketSerializer.Serializer(packet);
-
             server.SendTo(groupPacket, remoteEP);
-            Console.WriteLine("Send Packet!");
+            //server.SendTo(groupPacket, roomServer1EP);
+            Console.WriteLine("Send Packet to Room1!");
         }
        
         //public void CheckPacket(byte[] byte_)

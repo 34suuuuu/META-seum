@@ -27,6 +27,8 @@ public class InputController : MonoBehaviour
                 Quaternion currentCam = transform.rotation;
 
                 userDatagram.status = "connected";
+                userDatagram.source = "client";
+                userDatagram.dest = "server";
                 userDatagram.playerPosPacket = new PlayerPosPacket(NetworkUtility.ChangeVector3Package(currentPos));
                 userDatagram.playerCamPacket = new PlayerCamPacket(NetworkUtility.ChangeQuaternionPackage(currentCam));
                 userDatagram.playerInfoPacket = new PlayerInfoPacket();
