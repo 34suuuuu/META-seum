@@ -11,6 +11,7 @@ namespace StarterAssets.Packet
         }
         public string source { get; set; }
         public string dest { get; set; }
+        public int portNum { get; set; }
         public int packetNum { get; set; }
         public string status { get; set; }
         

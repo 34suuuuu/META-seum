@@ -11,12 +11,12 @@ namespace Server
     {
         private int port, roomPort1;
         private Socket server;
-        private IPAddress roomServer1IP;
+        private IPAddress serverIP;
         private IPEndPoint roomServer1EP;
-        public UDPServer(int port)
+        public UDPServer(int port, int roomPort1)
         {
             this.port = port;
-            //this.roomPort1 = roomPort1;
+            this.roomPort1 = roomPort1;
             this.server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         }
@@ -24,8 +24,8 @@ namespace Server
         public void Start() // 새로운 소켓 생성, 로컬엔드포인트에 바인딩 -> 수신대기 상태
         {
             IPEndPoint localEP = new IPEndPoint(IPAddress.Any, port);
-            //roomServer1IP = IPAddress.Parse("127.0.0.1");
-            //roomServer1EP = new IPEndPoint(roomServer1IP, roomPort1);
+            serverIP = IPAddress.Parse("127.0.0.1");
+            roomServer1EP = new IPEndPoint(serverIP, roomPort1);
             server.Bind(localEP);
             Console.WriteLine("Server Start!");
             BeginReceive(); // 비동기적으로 패킷 수신
@@ -50,7 +50,7 @@ namespace Server
                 PacketDatagram packet = PacketSerializer.Deserializer(buffer) as PacketDatagram; // 수신한 패킷을 역직렬화
                 if (packet != null)
                 {
-                    HandlePacket(packet, (IPEndPoint)clientEP);
+                    HandlePacket(ref packet, (IPEndPoint)clientEP);
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace Server
             }
         }
 
-        private void HandlePacket(PacketDatagram packet, IPEndPoint remoteEP) // 수신한 패킷을 출력 & 추후 처리
+        private void HandlePacket(ref PacketDatagram packet, IPEndPoint remoteEP) // 수신한 패킷을 출력 & 추후 처리
             //패킷을 받아서 패킷에 있는 그룹id를 통해 가중치를 계산하고, 위치 동기화 시키는 서버에 넘겨줌
             //서버 정보도 저장해야함
         {
@@ -83,10 +83,24 @@ namespace Server
             //int groupWeight = packet.playerInfoPacket.group == 1 ? 5 : packet.playerInfoPacket.group == 2 ? 3 : 1;
             // room id가 있으면 room id로 함
             // room id가 없어서 일단 group id를 보고 이동
-            byte[] groupPacket = PacketSerializer.Serializer(packet);
-            server.SendTo(groupPacket, remoteEP);
-            //server.SendTo(groupPacket, roomServer1EP);
-            Console.WriteLine("Send Packet to Room1!");
+            byte[] serializedPacket;
+            //server.SendTo(groupPacket, remoteEP);
+            if (packet.source.Equals("client") && packet.dest.Equals("server"))
+            {
+                Console.WriteLine("Send Packet to Room1!");
+                packet.portNum = remoteEP.Port;
+                serializedPacket = PacketSerializer.Serializer(packet);
+                server.SendTo(serializedPacket, roomServer1EP);
+            }
+            else if (packet.source.Equals("server") && packet.dest.Equals("client"))
+            {
+                Console.WriteLine("Send Packet to Client!");
+                Console.WriteLine(packet.portNum);
+                serializedPacket = PacketSerializer.Serializer(packet);
+                server.SendTo(serializedPacket, new IPEndPoint(serverIP, packet.portNum));
+                
+            }
+            
         }
        
         //public void CheckPacket(byte[] byte_)

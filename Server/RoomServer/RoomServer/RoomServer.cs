@@ -6,7 +6,10 @@ namespace RoomServer
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            UDPRoom1Server room1Server = new UDPRoom1Server(5050);
+            room1Server.Start();
+
+            Console.ReadLine();
         }
     }
 }

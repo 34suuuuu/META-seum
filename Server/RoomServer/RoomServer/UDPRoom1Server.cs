@@ -43,17 +43,19 @@ namespace RoomServer
             PacketDatagram packet = PacketSerializer.Deserializer(buffer) as PacketDatagram;
             if (packet != null)
             {
-                HandlePacket(packet, (IPEndPoint)clientEP);
+                HandlePacket(ref packet, (IPEndPoint)clientEP);
             }
             BeginReceive();
         }
 
-        private void HandlePacket(PacketDatagram packet, IPEndPoint remoteEP)
+        private void HandlePacket(ref PacketDatagram packet, IPEndPoint remoteEP)
         {
-            packet.playerInfoPacket.group = 3;
+            packet.source = "server";
+            packet.dest = "client";
             Console.WriteLine("Received packet from {0}:{1}", remoteEP.Address, remoteEP.Port);
+            Console.WriteLine(packet.packetNum);
             byte[] serializedPacket = PacketSerializer.Serializer(packet);
-            server.SendTo(serializedPacket, remoteEP);
+            server.SendTo(serializedPacket, remoteEP); // 8080 server
             Console.WriteLine("Send Packet to UDPServer!");
         }
     }
