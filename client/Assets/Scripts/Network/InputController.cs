@@ -8,6 +8,7 @@ public class InputController : MonoBehaviour
 {
     NetworkManager networkManager;
     Vector3 playerPos = new Vector3();
+    Quaternion playerRot = new Quaternion();
     PacketDatagram userDatagram;
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,7 @@ public class InputController : MonoBehaviour
     {
         if (networkManager.id != -1)
         {
-            if ((playerPos - transform.position).sqrMagnitude > 0.0001) 
+            if ((playerPos - transform.position).sqrMagnitude > 0.0001 || (playerRot != transform.rotation))
             {
                 Vector3 currentPos = transform.position;
                 Quaternion currentCam = transform.rotation;
@@ -36,6 +37,7 @@ public class InputController : MonoBehaviour
                 
                 networkManager.SendPacket(userDatagram);
                 playerPos = transform.position;
+                playerRot = transform.rotation;
             }
         }
     }
