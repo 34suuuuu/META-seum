@@ -1,0 +1,13 @@
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/SycServer.exe
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/SycServer.pdb
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/Assembly-CSharp.dll
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/UnityEngine.UI.dll
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/Unity.InputSystem.dll
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/Assembly-CSharp.pdb
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/UnityEngine.UI.pdb
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/bin/Debug/Unity.InputSystem.pdb
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/obj/Debug/SycServer.csproj.AssemblyReference.cache
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/obj/Debug/SycServer.csproj.CoreCompileInputs.cache
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/obj/Debug/SycServer.csproj.CopyComplete
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/obj/Debug/SycServer.exe
+/Users/ohgyulim/Desktop/23-1학기/META-seum/Server/RoomServer/RoomServer/SycServer/SycServer/SycServer/obj/Debug/SycServer.pdb

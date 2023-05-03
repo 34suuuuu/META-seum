@@ -56,3 +56,11 @@ The following packages were updated:
   com.unity.collab-proxy from version 2.0.1 to 2.0.3
   com.unity.inputsystem from version 1.5.0 to 1.5.1
   com.unity.render-pipelines.universal from version 12.1.10 to 12.1.11
+
+=== Wed May  3 19:18:15 2023
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.universal from version 12.1.10 to 12.1.11

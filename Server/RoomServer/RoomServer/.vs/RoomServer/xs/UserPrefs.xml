@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.ItemProperties.RoomServer PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="UDPRoom1Server.cs">
     <Files>
-      <File FileName="RoomServer.cs" Line="2" Column="1" />
-      <File FileName="UDPRoom1Server.cs" Line="57" Column="60" />
+      <File FileName="RoomServer.cs" Line="11" Column="1" />
+      <File FileName="UDPRoom1Server.cs" Line="50" Column="57" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,7 +11,7 @@
           <Node name="RoomServer" expanded="True">
             <Node name="RoomServer" expanded="True">
               <Node name="References" expanded="True" />
-              <Node name="RoomServer.cs" selected="True" />
+              <Node name="UDPRoom1Server.cs" selected="True" />
             </Node>
           </Node>
         </State>

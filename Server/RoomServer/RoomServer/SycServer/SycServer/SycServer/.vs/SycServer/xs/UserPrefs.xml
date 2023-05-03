@@ -1,0 +1,27 @@
+﻿<Properties StartupConfiguration="{4CF06E7B-A384-4ACD-9D1B-64F525806C71}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UDPSyc1Server.cs">
+    <Files>
+      <File FileName="SycServer.cs" Line="1" Column="1" />
+      <File FileName="UDPSyc1Server.cs" Line="51" Column="10" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="SycServer" expanded="True">
+            <Node name="SycServer" expanded="True">
+              <Node name="References" expanded="True" />
+              <Node name="UDPSyc1Server.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.SycServer PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|anycpu" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

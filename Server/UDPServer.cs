@@ -48,6 +48,7 @@ namespace Server
                 int bytesRead = server.EndReceiveFrom(ar, ref clientEP);
 
                 PacketDatagram packet = PacketSerializer.Deserializer(buffer) as PacketDatagram; // 수신한 패킷을 역직렬화
+                
                 if (packet != null)
                 {
                     HandlePacket(ref packet, (IPEndPoint)clientEP);
@@ -77,7 +78,6 @@ namespace Server
             //패킷을 받아서 패킷에 있는 그룹id를 통해 가중치를 계산하고, 위치 동기화 시키는 서버에 넘겨줌
             //서버 정보도 저장해야함
         {
-            packet.playerInfoPacket.group = 2;
             Console.WriteLine("Received packet from {0}:{1}", remoteEP.Address, remoteEP.Port);
             Console.WriteLine("user id :{0}, user name :{1}, group id :{2}, source :{3}", packet.playerInfoPacket.id, packet.playerInfoPacket.playerName, packet.playerInfoPacket.group, packet.source);
             //int groupWeight = packet.playerInfoPacket.group == 1 ? 5 : packet.playerInfoPacket.group == 2 ? 3 : 1;
@@ -87,18 +87,17 @@ namespace Server
             //server.SendTo(groupPacket, remoteEP);
             if (packet.source.Equals("client") && packet.dest.Equals("server"))
             {
-                Console.WriteLine("Send Packet to Room1!");
                 packet.portNum = remoteEP.Port;
                 serializedPacket = PacketSerializer.Serializer(packet);
                 server.SendTo(serializedPacket, roomServer1EP);
+                Console.WriteLine("Send Packet to Room1!");
             }
-            else if (packet.source.Equals("server") && packet.dest.Equals("client"))
+            else if (packet.source.Equals("roomServer") && packet.dest.Equals("server"))
             {
-                Console.WriteLine("Send Packet to Client!");
-                Console.WriteLine(packet.portNum);
                 serializedPacket = PacketSerializer.Serializer(packet);
                 server.SendTo(serializedPacket, new IPEndPoint(serverIP, packet.portNum));
-                
+                Console.WriteLine("Send Packet to Client!");
+
             }
             
         }
