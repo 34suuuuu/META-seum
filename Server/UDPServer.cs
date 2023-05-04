@@ -87,16 +87,16 @@ namespace Server
             //server.SendTo(groupPacket, remoteEP);
             if (packet.source.Equals("client") && packet.dest.Equals("server"))
             {
-                packet.portNum = remoteEP.Port;
+                packet.portNum = remoteEP.Port; 
                 serializedPacket = PacketSerializer.Serializer(packet);
                 server.SendTo(serializedPacket, roomServer1EP);
-                Console.WriteLine("Send Packet to Room1!");
+                Console.WriteLine("Send Packet to Room1!\n");
             }
             else if (packet.source.Equals("roomServer") && packet.dest.Equals("server"))
             {
                 serializedPacket = PacketSerializer.Serializer(packet);
                 server.SendTo(serializedPacket, new IPEndPoint(serverIP, packet.portNum));
-                Console.WriteLine("Send Packet to Client!");
+                Console.WriteLine("Send Packet to Client!\n");
 
             }
             

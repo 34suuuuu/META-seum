@@ -1,14 +1,15 @@
 ﻿<Properties StartupConfiguration="{4CF06E7B-A384-4ACD-9D1B-64F525806C71}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="SycServer/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="SycServer/UDPSyc1Server.cs">
     <Files>
-      <File FileName="SycServer/Program.cs" Line="1" Column="1" />
+      <File FileName="SycServer/SycServer.cs" Line="16" Column="1" />
+      <File FileName="SycServer/UDPSyc1Server.cs" Line="62" Column="58" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="SycServer" expanded="True">
             <Node name="SycServer" expanded="True">
-              <Node name="Program.cs" selected="True" />
+              <Node name="UDPSyc1Server.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -16,7 +17,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.SycServer FirstBuild="True" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.SycServer PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|anycpu" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

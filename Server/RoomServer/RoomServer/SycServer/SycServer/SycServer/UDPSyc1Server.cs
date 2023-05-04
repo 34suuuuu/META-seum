@@ -59,7 +59,7 @@ namespace SycServer
             Console.WriteLine(packet.packetNum);
             serializedPacket = PacketSerializer.Serializer(packet);
             server.SendTo(serializedPacket, new IPEndPoint(serverIP, 5050));
-            Console.WriteLine("Send Packet to RoomServer!");
+            Console.WriteLine("Send Packet to RoomServer!\n");
         }
     }
 }
