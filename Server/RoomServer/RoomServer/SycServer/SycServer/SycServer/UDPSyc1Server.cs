@@ -56,7 +56,6 @@ namespace SycServer
             packet.source = "sycServer";
             packet.dest = "roomServer";
             Console.WriteLine("Received packet from {0}:{1}", remoteEP.Address, remoteEP.Port);
-            Console.WriteLine(packet.packetNum);
             serializedPacket = PacketSerializer.Serializer(packet);
             server.SendTo(serializedPacket, new IPEndPoint(serverIP, 5050));
             Console.WriteLine("Send Packet to RoomServer!\n");

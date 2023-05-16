@@ -99,6 +99,7 @@ namespace RoomServer
             {
                 packet.source = "roomServer";
                 packet.dest = "sycServer";
+                packet.playerInfoPacket.group = 1; // 임의로 추가해봄
                 serializedPacket = PacketSerializer.Serializer(packet);
 
                 if (loadBalancer.servers.Count == 0) //sync server가 하나도 없으면

@@ -9,6 +9,7 @@ namespace StarterAssets.Packet
         {
             
         }
+        public int sequenceNumber { get; set; }
         public string source { get; set; }
         public string dest { get; set; }
         public int portNum { get; set; }
