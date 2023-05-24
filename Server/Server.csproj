@@ -28,14 +28,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\23-1학기\META-seum\client\Library\Bee\artifacts\200b0aE.dag\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\System.Numerics.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UDPServer.cs" />
+    <Compile Include="UDPRoom1Server.cs" />
+    <Compile Include="UDPSyc1Server.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="UDPSyc2Server.cs" />
+    <Compile Include="UDPSyc3Server.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>
