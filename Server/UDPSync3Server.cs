@@ -6,14 +6,14 @@ using StarterAssets.Packet;
 
 namespace Server
 {
-    public class UDPSyc2Server
+    public class UDPSync3Server
     {
-        private int port = 6062;
+        private int port = 6063;
         private int room1Port = 5051;
         private Socket udp;
         private IPAddress ip;
         private IPEndPoint room1ServerEP;
-        public UDPSyc2Server()
+        public UDPSync3Server()
         {
             udp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             BeginReceive();
@@ -25,7 +25,7 @@ namespace Server
             ip = IPAddress.Parse("127.0.0.1");
             room1ServerEP = new IPEndPoint(ip, room1Port);
             udp.Bind(localEP);
-            Console.WriteLine("Syc2 Server Start!");
+            Console.WriteLine("Sync3 Server Start!");
 
         }
 
@@ -61,7 +61,7 @@ namespace Server
             packet.source = "server";
             packet.dest = "client";
             SendPacket(ref packet, room1ServerEP); // 나중에 고쳐야됨
-            Console.WriteLine("Syc2 ------ Send Packet to RoomServer!\n");
+            Console.WriteLine("Sync3 ------ Send Packet to RoomServer!\n");
         }
 
         private void SendPacket(ref PacketDatagram pd, EndPoint addr)
@@ -71,4 +71,3 @@ namespace Server
         }
     }
 }
-

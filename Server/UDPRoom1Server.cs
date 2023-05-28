@@ -9,10 +9,10 @@ namespace Server
     public class UDPRoom1Server
     {
         private int port = 5051;
-        private int syc1Port = 6061;
-        private int syc2Port = 6062;
-        private int syc3Port = 6063;
-        private IPEndPoint sycServer1EP, sycServer2EP, sycServer3EP;
+        private int sync1Port = 6061;
+        private int sync2Port = 6062;
+        private int sync3Port = 6063;
+        private IPEndPoint syncServer1EP, syncServer2EP, syncServer3EP;
         private Socket udp;
         private IPAddress ip;
         private Dictionary<EndPoint, Client> clients;
@@ -37,12 +37,12 @@ namespace Server
         public void Start()
         {
             IPEndPoint localEP = new IPEndPoint(IPAddress.Any, port);
-            sycServer1EP = new IPEndPoint(ip, syc1Port);
-            sycServer2EP = new IPEndPoint(ip, syc2Port);
-            sycServer3EP = new IPEndPoint(ip, syc3Port);
-            weights.Add(sycServer1EP, 0);
-            weights.Add(sycServer2EP, 0);
-            weights.Add(sycServer3EP, 0);
+            syncServer1EP = new IPEndPoint(ip, sync1Port);
+            syncServer2EP = new IPEndPoint(ip, sync2Port);
+            syncServer3EP = new IPEndPoint(ip, sync3Port);
+            weights.Add(syncServer1EP, 0);
+            weights.Add(syncServer2EP, 0);
+            weights.Add(syncServer3EP, 0);
             udp.Bind(localEP);
 
             Console.WriteLine("Room1 Server Start!");
@@ -100,13 +100,13 @@ namespace Server
             pd.status = "request";
             pd.playerInfoPacket.id = idAssignIndex++;
 
-            EndPoint minSycEP = ReturnEndPoint();
-            Console.WriteLine("{0} SycServer - minWeight: {1}", minSycEP, weights[minSycEP]);
+            EndPoint minSyncEP = ReturnEndPoint();
+            Console.WriteLine("{0} SyncServer - minWeight: {1}", minSyncEP, weights[minSyncEP]);
 
-            CalcWeight(1, minSycEP, ref pd);
+            CalcWeight(1, minSyncEP, ref pd);
 
-            Console.WriteLine("{0} SycServer - minWeight: {1}  <-- After Calc", minSycEP, weights[minSycEP]);
-            SendPacket(ref pd, minSycEP);
+            Console.WriteLine("{0} SyncServer - minWeight: {1}  <-- After Calc", minSyncEP, weights[minSyncEP]);
+            SendPacket(ref pd, minSyncEP);
         }
 
 
@@ -132,18 +132,18 @@ namespace Server
                     return;
                 if (pd.source == "client" && pd.dest == "server")
                 {
-                    EndPoint minSycEP = ReturnEndPoint();
-                    Console.WriteLine("{0} SycServer - minWeight: {1}", minSycEP, weights[minSycEP]);
+                    EndPoint minSyncEP = ReturnEndPoint();
+                    Console.WriteLine("{0} SyncServer - minWeight: {1}", minSyncEP, weights[minSyncEP]);
 
-                    CalcWeight(1, minSycEP, ref pd);
+                    CalcWeight(1, minSyncEP, ref pd);
 
-                    Console.WriteLine("{0} SycServer - minWeight: {1}  <-- After Calc", minSycEP, weights[minSycEP]);
-                    SendPacket(ref pd, sycServer1EP);
+                    Console.WriteLine("{0} SyncServer - minWeight: {1}  <-- After Calc", minSyncEP, weights[minSyncEP]);
+                    SendPacket(ref pd, syncServer1EP);
                 }
                 else if (pd.source == "server" && pd.dest == "client")
                 {
                     CalcWeight(-1, remoteEP, ref pd);
-                    Console.WriteLine("{0} SycServer - minWeight: {1}  <-- After minus Calc", remoteEP, weights[remoteEP]);
+                    Console.WriteLine("{0} SyncServer - minWeight: {1}  <-- After minus Calc", remoteEP, weights[remoteEP]);
                     HandleUserMoveInput(pd.portNum, ref pd, seqNum);
                 }
             }
@@ -158,7 +158,7 @@ namespace Server
 
         //    SendPacket(ref pd, clientEP);
 
-        //    //SendPacket(ref pd, new IPEndPoint(ip, syc1Port));
+        //    //SendPacket(ref pd, new IPEndPoint(ip, sync1Port));
         //    pd.status = "connected";
         //    clients.Add(clientEP, new Client(pd.playerInfoPacket.id, pd));
         //    BroadcastToNewClient(ref pd);
@@ -246,26 +246,26 @@ namespace Server
         EndPoint ReturnEndPoint()
         {
             int minWeight = 999;
-            EndPoint minSycEP = sycServer1EP;
+            EndPoint minSyncEP = syncServer1EP;
             foreach (KeyValuePair<EndPoint, int> w in weights)
             {
                 if (minWeight > w.Value)
                 {
                     minWeight = w.Value;
-                    minSycEP = w.Key;
+                    minSyncEP = w.Key;
                 }
             }
-            return minSycEP;
+            return minSyncEP;
         }
 
-        void CalcWeight(int addOrSub, EndPoint SycEp, ref PacketDatagram pd)
+        void CalcWeight(int addOrSub, EndPoint SyncEp, ref PacketDatagram pd)
         {
             int groupId = pd.playerInfoPacket.group;
             int weight = groupId == 1 ? group1Weight : groupId == 2 ? group2Weight : group3Weight;
             if (addOrSub == 1)
-                weights[SycEp] += weight;
+                weights[SyncEp] += weight;
             else if (addOrSub == -1)
-                weights[SycEp] -= weight;
+                weights[SyncEp] -= weight;
         }
     }
 }
