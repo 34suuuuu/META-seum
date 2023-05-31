@@ -58,10 +58,13 @@ namespace StarterAssets
             }
         }
 
-        public void SendPacket(PacketDatagram pd)
+        public void SendPacket(PacketDatagram pd, EndPoint ep = null)
         {
             byte[] packet = PacketSerializer.Serializer(pd);
-            Udp.SendTo(packet, EndPoint);
+            if (ep == null)
+                Udp.SendTo(packet, EndPoint);
+            else
+                Udp.SendTo(packet, ep);
         }
 
         private void OnApplicationQuit()

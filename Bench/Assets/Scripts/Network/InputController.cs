@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using StarterAssets;
 using StarterAssets.Packet;
 using UnityEngine;
@@ -33,7 +34,14 @@ public class InputController : MonoBehaviour
         pd.playerCamPacket = new PlayerCamPacket(NetworkUtility.ChangeQuaternionPackage(transform.rotation));
         pd.playerInfoPacket = new PlayerInfoPacket();
 
+        IPEndPoint syncEp1 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6061);
+        IPEndPoint syncEp2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6062);
+        IPEndPoint syncEp3 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6063);
+        
         networkManager.SendPacket(pd);
+        networkManager.SendPacket(pd, syncEp1);
+        networkManager.SendPacket(pd, syncEp2);
+        networkManager.SendPacket(pd, syncEp3);
     }
 
     private void Update()
@@ -52,7 +60,8 @@ public class InputController : MonoBehaviour
             userDatagram.playerInfoPacket = new PlayerInfoPacket
                 {
                     id = networkManager.id,
-                    group = StartScript.groupIdStatic
+                    group = StartScript.groupIdStatic,
+                    roomNum = StartScript.roomIdStatic
                 };
 
             networkManager.SendPacket(userDatagram);

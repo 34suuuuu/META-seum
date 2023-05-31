@@ -12,6 +12,7 @@ namespace StarterAssets
     {
         private int seed;
         private int playerNum;
+        private int startId;
     
         private GameObject go;
         public static float elapsedTimeSum;
@@ -25,10 +26,11 @@ namespace StarterAssets
         {
             seed = StartScript.seedStatic;
             playerNum = StartScript.playerNumStatic;
+            startId = StartScript.startIdStatic;
             maxLatency = 0;
             minLatency = int.MaxValue;
             Random.InitState(seed);
-            for (int i = 0; i < playerNum; i++)
+            for (int i = startId; i < startId + playerNum; i++)
             {
                 go = Resources.Load("Capsule") as GameObject;
                 Vector3 randPos = new Vector3(
