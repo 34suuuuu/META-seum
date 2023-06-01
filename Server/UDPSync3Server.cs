@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using StarterAssets.Packet;
 using System.Collections.Generic;
-
+using System.Threading;
 
 namespace Server
 {
@@ -16,6 +16,9 @@ namespace Server
         private int idAssignIndex = 0;
 
         private Dictionary<EndPoint, Client> clients;
+        private object clientsLock = new object();
+
+        private Thread receiveThread;
 
         public UDPSync3Server()
         {
@@ -23,7 +26,9 @@ namespace Server
             clients = new Dictionary<EndPoint, Client>();
             ip = IPAddress.Parse("127.0.0.1");
 
-            BeginReceive();
+            receiveThread = new Thread(BeginReceive);
+
+            //BeginReceive();
         }
 
         public void Start()
@@ -32,6 +37,7 @@ namespace Server
             udp.Bind(localEP);
             Console.WriteLine("Sync3 Server Start!");
 
+            receiveThread.Start();
         }
 
         private void BeginReceive()
@@ -39,7 +45,6 @@ namespace Server
             byte[] buffer = new byte[1024];
             EndPoint clientEP = new IPEndPoint(IPAddress.Any, 0);
             udp.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref clientEP, new AsyncCallback(OnReceive), buffer);
-
         }
 
         private void OnReceive(IAsyncResult ar)
@@ -71,50 +76,60 @@ namespace Server
 
         private void HandleNewClient(ref PacketDatagram packet, IPEndPoint remoteEP)
         {
-            IPEndPoint clientEP = new IPEndPoint(ip, packet.portNum);
-
             packet.packetNum = 0;
             packet.status = "request";
+            packet.portNum = remoteEP.Port;
             packet.playerInfoPacket.id = idAssignIndex++;
 
-            SendPacket(ref packet, clientEP);
+            SendPacket(ref packet, remoteEP);
 
             packet.status = "connected";
 
             if (remoteEP.Port != 8080)
             {
-                AddClient(ref packet);
-                BroadcastToNewClient(ref packet);
-                SendPositionToAllClients(ref packet);
+                lock (clientsLock)
+                {
+                    AddClient(ref packet);
+                    BroadcastToNewClient(ref packet);
+                    SendPositionToAllClients(ref packet);
+                }
             }
             Console.WriteLine("Sync3 ------ Send Packet to Client!\n");
         }
 
         private void AddClient(ref PacketDatagram pd)
         {
-
             IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
 
-            if (!clients.ContainsKey(clientEP))
+            lock (clientsLock)
             {
-                clients.Add(clientEP, new Client(pd.playerInfoPacket.id, pd));
+                if (!clients.ContainsKey(clientEP))
+                {
+                    clients.Add(clientEP, new Client(pd.playerInfoPacket.id, pd));
+                }
             }
         }
 
-        void BroadcastToNewClient(ref PacketDatagram pd)
+        private void BroadcastToNewClient(ref PacketDatagram pd)
         {
             IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
-            foreach (KeyValuePair<EndPoint, Client> client in clients)
+            lock (clientsLock)
             {
-                SendPacket(ref client.Value.pd, clientEP); // 기존 패킷 to New Client
+                foreach (KeyValuePair<EndPoint, Client> client in clients)
+                {
+                    SendPacket(ref client.Value.pd, clientEP); // 기존 패킷 to New Client
+                }
             }
         }
 
-        void SendPositionToAllClients(ref PacketDatagram pd)
+        private void SendPositionToAllClients(ref PacketDatagram pd)
         {
-            foreach (KeyValuePair<EndPoint, Client> p in clients)
+            lock (clientsLock)
             {
-                SendPacket(ref pd, p.Key);
+                foreach (KeyValuePair<EndPoint, Client> p in clients)
+                {
+                    SendPacket(ref pd, p.Key);
+                }
             }
         }
 
@@ -128,54 +143,62 @@ namespace Server
             HandleUserMoveInput(ref pd, clientEP, seqNum);
         }
 
-        void HandleUserMoveInput(ref PacketDatagram pd, EndPoint clientEP, int seqNumber)
+        private void HandleUserMoveInput(ref PacketDatagram pd, EndPoint clientEP, int seqNumber)
         {
-            if (!clients.ContainsKey(clientEP) || clients[clientEP].lastSeqNumber > seqNumber)
-                return;
-
-            if (!clients[clientEP].history.ContainsKey(seqNumber))
+            lock (clientsLock)
             {
-                clients[clientEP].UpdateStateHistory(seqNumber);
-                clients[clientEP].lastSeqNumber = seqNumber;
+                if (!clients.ContainsKey(clientEP) || clients[clientEP].lastSeqNumber > seqNumber)
+                    return;
+
+                if (!clients[clientEP].history.ContainsKey(seqNumber))
+                {
+                    clients[clientEP].UpdateStateHistory(seqNumber);
+                    clients[clientEP].lastSeqNumber = seqNumber;
+                }
+                UpdatePosition(clientEP, ref pd);
+                SendPositionToAllClients(ref pd);
             }
-            UpdatePosition(clientEP, ref pd);
-            /* so that clients see newly connected clients */
-            SendPositionToAllClients(ref pd);
         }
 
-        void UpdatePosition(EndPoint addr, ref PacketDatagram pd)
+        private void UpdatePosition(EndPoint addr, ref PacketDatagram pd)
         {
-            //Debug.Log($"packetId: {pd.playerInfoPacket.id}" +
-            //          $"position: {pd.playerPosPacket.toString()}");
-            clients[addr].pd = pd;
-            clients[addr].pos.x = pd.playerPosPacket.x;
-            clients[addr].pos.y = pd.playerPosPacket.y;
-            clients[addr].pos.z = pd.playerPosPacket.z;
-            clients[addr].cam.x = pd.playerCamPacket.x;
-            clients[addr].cam.y = pd.playerCamPacket.y;
-            clients[addr].cam.z = pd.playerCamPacket.z;
-            clients[addr].cam.w = pd.playerCamPacket.w;
+            lock (clientsLock)
+            {
+                clients[addr].pd = pd;
+                clients[addr].pos.x = pd.playerPosPacket.x;
+                clients[addr].pos.y = pd.playerPosPacket.y;
+                clients[addr].pos.z = pd.playerPosPacket.z;
+                clients[addr].cam.x = pd.playerCamPacket.x;
+                clients[addr].cam.y = pd.playerCamPacket.y;
+                clients[addr].cam.z = pd.playerCamPacket.z;
+                clients[addr].cam.w = pd.playerCamPacket.w;
+            }
         }
 
-        void DisconnectClient(ref PacketDatagram pd)
+        private void DisconnectClient(ref PacketDatagram pd)
         {
             IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
             Console.WriteLine($"id:{pd.playerInfoPacket.id}, disconnect client");
-            if (clients.ContainsKey(clientEP))
-                clients.Remove(clientEP);
-            Broadcast(ref pd);
+            lock (clientsLock)
+            {
+                if (clients.ContainsKey(clientEP))
+                    clients.Remove(clientEP);
+                Broadcast(ref pd);
+            }
         }
 
-        void Broadcast(ref PacketDatagram pd)
+        private void Broadcast(ref PacketDatagram pd)
         {
-            foreach (KeyValuePair<EndPoint, Client> p in clients)
-                SendPacket(ref pd, p.Key);
+            lock (clientsLock)
+            {
+                foreach (KeyValuePair<EndPoint, Client> p in clients)
+                    SendPacket(ref pd, p.Key);
+            }
         }
 
         private void SendPacket(ref PacketDatagram pd, EndPoint addr)
         {
             byte[] packet = PacketSerializer.Serializer(pd);
-            //IPEndPoint ipEndpoint = addr as IPEndPoint; // EndPoint를 IPEndPoint로 형변환
             udp.SendTo(packet, addr);
         }
     }

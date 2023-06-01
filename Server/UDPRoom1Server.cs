@@ -80,12 +80,10 @@ namespace Server
             if (pd.status.Equals("connected"))
             {
                 EndPoint minEndPoint = ReturnEndPoint();
-                CalcWeight(1, minEndPoint, ref pd);
+                CalcWeight(minEndPoint, ref pd);
                 SendPacket(ref pd, minEndPoint);
             }
         }
-
-
 
         private void SendPacket(ref PacketDatagram pd, EndPoint addr)
         {
@@ -97,25 +95,39 @@ namespace Server
         {
             int minWeight = 999;
             EndPoint minSyncEP = syncServer1EP;
-            foreach (KeyValuePair<EndPoint, int> w in weights)
+           
+            foreach (var kvp in weights)
             {
-                if (minWeight > w.Value)
+                if (minWeight > kvp.Value)
                 {
-                    minWeight = w.Value;
-                    minSyncEP = w.Key;
+                    minWeight = kvp.Value;
+                    minSyncEP = kvp.Key;
                 }
             }
             return minSyncEP;
         }
 
-        void CalcWeight(int addOrSub, EndPoint SyncEp, ref PacketDatagram pd)
+        void CalcWeight(EndPoint SyncEp, ref PacketDatagram pd)
         {
             int groupId = pd.playerInfoPacket.group;
             int weight = groupId == 1 ? group1Weight : groupId == 2 ? group2Weight : group3Weight;
-            if (addOrSub == 1)
-                weights[SyncEp] += weight;
-            else if (addOrSub == -1)
-                weights[SyncEp] -= weight;
+
+            List<EndPoint> keysToRemove = new List<EndPoint>();
+
+            foreach (var kvp in weights)
+            {
+                if (kvp.Value >= 50)
+                {
+                    keysToRemove.Add(kvp.Key);
+                }
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                weights[key] = 0;
+            }
+
+            weights[SyncEp] += weight;
         }
     }
 }
