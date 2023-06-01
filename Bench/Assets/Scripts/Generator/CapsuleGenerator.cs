@@ -10,25 +10,22 @@ namespace StarterAssets
 {
     public class CapsuleGenerator : MonoBehaviour
     {
-        private int seed;
         private int playerNum;
+        private int seed;
         private int startId;
     
         private GameObject go;
-        public static float elapsedTimeSum;
-        public static int elapsedTimeCount;
-        public static float realTime;
-        public static float minLatency;
-        public static float maxLatency;
     
+        void Awake() 
+        {
+            Application.targetFrameRate = 60;
+        }
         // Start is called before the first frame update
         void Start()
         {
             seed = StartScript.seedStatic;
             playerNum = StartScript.playerNumStatic;
             startId = StartScript.startIdStatic;
-            maxLatency = 0;
-            minLatency = int.MaxValue;
             Random.InitState(seed);
             for (int i = startId; i < startId + playerNum; i++)
             {
@@ -40,13 +37,8 @@ namespace StarterAssets
                 Vector3 angle = new Vector3(0f, Random.Range(0, 360), 0f);
                 
                 GameObject gv = Instantiate(go, randPos, Quaternion.Euler(angle));
-                gv.GetComponent<NetworkManager>().id = i + 1;
+                gv.GetComponent<NetworkManager>().id = i;
             }
-        }
-
-        private void Update()
-        {
-            //Debug.Log(elapsedTimeSum / elapsedTimeCount * 1000 + "ms");
         }
     }
 }

@@ -44,7 +44,7 @@ public class InputController : MonoBehaviour
         networkManager.SendPacket(pd, syncEp3);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if ((transform.position - playerPos).sqrMagnitude > 0.00001f)
         {
