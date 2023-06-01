@@ -23,6 +23,9 @@ namespace StarterAssets
     {
         [SerializeField] private string serverIp = "127.0.0.1";
         [SerializeField] private int port = 8080;
+        [SerializeField] private int syncPort1 = 6061;
+        [SerializeField] private int syncPort2 = 6062;
+        [SerializeField] private int syncPort3 = 6063;
 
         public int id { get; private set; }
         public string playerName;
@@ -146,6 +149,9 @@ namespace StarterAssets
 
             byte[] packet = PacketSerializer.Serializer(pd);
             _udp.SendTo(packet, _endPoint);
+            _udp.SendTo(packet, new IPEndPoint(IPAddress.Parse(serverIp), syncPort1));
+            _udp.SendTo(packet, new IPEndPoint(IPAddress.Parse(serverIp), syncPort2));
+            _udp.SendTo(packet, new IPEndPoint(IPAddress.Parse(serverIp), syncPort3));
         }
 
         public void SendPacket(PacketDatagram pd)

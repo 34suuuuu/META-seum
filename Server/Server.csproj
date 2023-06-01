@@ -28,17 +28,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="netstandard">
-      <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\netstandard.dll</HintPath>
-    </Reference>
     <Reference Include="System.Numerics">
       <HintPath>..\..\..\23-1학기\META-seum\client\Temp\StagingArea\Data\Managed\System.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\Applications\Unity\Hub\Editor\2021.3.21f1\PlaybackEngines\WebGLSupport\Variations\nondevelopment_mt\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>bin\Debug\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

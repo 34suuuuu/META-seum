@@ -117,3 +117,6 @@
 /Users/suhyun/Desktop/META-seum/Server/bin/Debug/UnityEngine.GridModule.dll
 /Users/suhyun/Desktop/META-seum/Server/bin/Debug/UnityEngine.SubsystemsModule.dll
 /Users/suhyun/Desktop/META-seum/Server/bin/Debug/System.Security.dll
+/Users/suhyun/Desktop/META-seum/Server/bin/Debug/UnityEngine.CoreModule.dll
+/Users/suhyun/Desktop/META-seum/Server/bin/Debug/UnityEngine.CoreModule.pdb
+/Users/suhyun/Desktop/META-seum/Server/bin/Debug/UnityEngine.SharedInternalsModule.pdb

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using StarterAssets.Packet;
+using System.Collections.Generic;
 
 
 namespace Server
@@ -9,21 +10,25 @@ namespace Server
     public class UDPSync2Server
     {
         private int port = 6062;
-        private int room1Port = 5051;
+        private int room1Port = 8080;
         private Socket udp;
         private IPAddress ip;
-        private IPEndPoint room1ServerEP;
+        private int idAssignIndex = 0;
+
+        private Dictionary<EndPoint, Client> clients;
+
         public UDPSync2Server()
         {
             udp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            clients = new Dictionary<EndPoint, Client>();
+            ip = IPAddress.Parse("127.0.0.1");
+
             BeginReceive();
         }
 
         public void Start()
         {
             IPEndPoint localEP = new IPEndPoint(IPAddress.Any, port);
-            ip = IPAddress.Parse("127.0.0.1");
-            room1ServerEP = new IPEndPoint(ip, room1Port);
             udp.Bind(localEP);
             Console.WriteLine("Sync2 Server Start!");
 
@@ -45,28 +50,132 @@ namespace Server
             PacketDatagram packet = PacketSerializer.Deserializer(buffer) as PacketDatagram;
             if (packet != null)
             {
-                HandlePacket(ref packet, (IPEndPoint)clientEP);
+                if (packet.status == "request")
+                {
+                    if (packet.source == "client" && packet.dest == "server")
+                    {
+                        HandleNewClient(ref packet, (IPEndPoint)clientEP);
+                    }
+                }
+                else if (packet.status == "quit")
+                {
+                    DisconnectClient(ref packet);
+                }
+                else if (packet.status == "connected")
+                {
+                    HandleConnectedClient(ref packet);
+                }
             }
             BeginReceive();
         }
 
-        private void HandlePacket(ref PacketDatagram packet, IPEndPoint remoteEP)
+        private void HandleNewClient(ref PacketDatagram packet, IPEndPoint remoteEP)
         {
-            if (packet.status.Equals("request"))
-            {
-                SendPacket(ref packet, new IPEndPoint(ip, packet.portNum));
-                packet.status = "connected";
+            IPEndPoint clientEP = new IPEndPoint(ip, packet.portNum);
 
+            packet.packetNum = 0;
+            packet.status = "request";
+            packet.playerInfoPacket.id = idAssignIndex++;
+
+            SendPacket(ref packet, clientEP);
+
+            packet.status = "connected";
+
+            if (remoteEP.Port != 8080)
+            {
+                AddClient(ref packet);
+                BroadcastToNewClient(ref packet);
+                SendPositionToAllClients(ref packet);
             }
-            packet.source = "server";
-            packet.dest = "client";
-            SendPacket(ref packet, room1ServerEP); // 나중에 고쳐야됨
-            Console.WriteLine("Sync2 ------ Send Packet to RoomServer!\n");
+            Console.WriteLine("Sync2 ------ Send Packet to Client!\n");
+        }
+
+        private void AddClient(ref PacketDatagram pd)
+        {
+
+            IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
+
+            if (!clients.ContainsKey(clientEP))
+            {
+                clients.Add(clientEP, new Client(pd.playerInfoPacket.id, pd));
+            }
+        }
+
+        void BroadcastToNewClient(ref PacketDatagram pd)
+        {
+            IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
+            foreach (KeyValuePair<EndPoint, Client> client in clients)
+            {
+                SendPacket(ref client.Value.pd, clientEP); // 기존 패킷 to New Client
+            }
+        }
+
+        void SendPositionToAllClients(ref PacketDatagram pd)
+        {
+            foreach (KeyValuePair<EndPoint, Client> p in clients)
+            {
+                SendPacket(ref pd, p.Key);
+            }
+        }
+
+        private void HandleConnectedClient(ref PacketDatagram pd)
+        {
+            IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
+            int packetId = pd.playerInfoPacket.id;
+            int seqNum = pd.packetNum;
+            if (packetId == -1 || seqNum == -1)
+                return;
+            HandleUserMoveInput(ref pd, clientEP, seqNum);
+        }
+
+        void HandleUserMoveInput(ref PacketDatagram pd, EndPoint clientEP, int seqNumber)
+        {
+            if (!clients.ContainsKey(clientEP) || clients[clientEP].lastSeqNumber > seqNumber)
+                return;
+
+            if (!clients[clientEP].history.ContainsKey(seqNumber))
+            {
+                clients[clientEP].UpdateStateHistory(seqNumber);
+                clients[clientEP].lastSeqNumber = seqNumber;
+            }
+            UpdatePosition(clientEP, ref pd);
+            /* so that clients see newly connected clients */
+            SendPositionToAllClients(ref pd);
+        }
+
+        void UpdatePosition(EndPoint addr, ref PacketDatagram pd)
+        {
+            //Debug.Log($"packetId: {pd.playerInfoPacket.id}" +
+            //          $"position: {pd.playerPosPacket.toString()}");
+            clients[addr].pd = pd;
+            clients[addr].pos.x = pd.playerPosPacket.x;
+            clients[addr].pos.y = pd.playerPosPacket.y;
+            clients[addr].pos.z = pd.playerPosPacket.z;
+            clients[addr].cam.x = pd.playerCamPacket.x;
+            clients[addr].cam.y = pd.playerCamPacket.y;
+            clients[addr].cam.z = pd.playerCamPacket.z;
+            clients[addr].cam.w = pd.playerCamPacket.w;
+        }
+
+        void DisconnectClient(ref PacketDatagram pd)
+        {
+            IPEndPoint clientEP = new IPEndPoint(ip, pd.portNum);
+            Console.WriteLine($"id:{pd.playerInfoPacket.id}, disconnect client");
+            if (clients.ContainsKey(clientEP))
+                clients.Remove(clientEP);
+            Broadcast(ref pd);
+        }
+
+        void Broadcast(ref PacketDatagram pd)
+        {
+            foreach (KeyValuePair<EndPoint, Client> p in clients)
+                SendPacket(ref pd, p.Key);
         }
 
         private void SendPacket(ref PacketDatagram pd, EndPoint addr)
         {
             byte[] packet = PacketSerializer.Serializer(pd);
+            //IPEndPoint ipEndpoint = addr as IPEndPoint; // EndPoint를 IPEndPoint로 형변환
             udp.SendTo(packet, addr);
         }
     }

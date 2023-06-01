@@ -88,7 +88,8 @@ namespace Server
             {
                 packet.portNum = remoteEP.Port;
                 serializedPacket = PacketSerializer.Serializer(packet);
-                switch (packet.playerInfoPacket.roomNum) {
+                switch (packet.playerInfoPacket.roomNum)
+                {
                     case 1:
                         udp.SendTo(serializedPacket, roomServer1EP); break;
                     case 2:
